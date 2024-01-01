@@ -101,14 +101,14 @@ function _main ()
   # Generate fstab excluding ZFS entries
   print ":: Generate fstab excluding ZFS entries"
   genfstab -U /mnt | grep -v "${zpoolname}" | tr -s '\n' | sed 's/\/mnt//'  > /mnt/etc/fstab
-   
+
   # Set hostname
   # Configure /etc/hosts
   print ":: Configure hosts file"
     cat > /mnt/etc/hosts <<EOF
-  #<ip-address>	<hostname.domain.org>	<hostname>
-  127.0.0.1	    localhost   	        ${hostname}
-  ::1   		    localhost             ${hostname}
+  #<ip-address> <hostname.domain.org>   <hostname>
+  127.0.0.1         localhost                   ${hostname}
+  ::1                       localhost             ${hostname}
 EOF
 
   # Prepare keymap
@@ -158,7 +158,7 @@ EOF
   print ":: Copy ZFS files"
   cp /etc/hostid /mnt/etc/hostid
   cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
-  cp /etc/zfs/${zpoolname}.key /mnt/etc/zfs
+  #cp /etc/zfs/${zpoolname}.key /mnt/etc/zfs
 
   ### Configure username
   if [[ -d /mnt/home/${user} ]];
@@ -221,7 +221,7 @@ EOSF
   # Generate locale
   locale-gen
   source /etc/locale.conf
-  
+
   # Set keyboard layout
   echo "KEYMAP=${keymap}" > /etc/vconsole.conf
 
@@ -375,7 +375,7 @@ EOF
   # Generate zfsbootmenu efi
   print ":: Configure zfsbootmenu"
   # https://github.com/zbm-dev/zfsbootmenu/blob/master/etc/zfsbootmenu/mkinitcpio.conf
-
+  mkdir /mnt/etc/zfsbootmenu
   cat > /mnt/etc/zfsbootmenu/mkinitcpio.conf <<"EOF"
 MODULES=()
 BINARIES=()
@@ -464,4 +464,3 @@ EOF
 }
 
 _main ${@}
-
